@@ -89,19 +89,14 @@ def attach_solutions_to_existing(
     competition_id: int,
     comp_year: int,
     comp_event: str | None,
-    solutions: list[str]
+    solutions: list[dict]
 ):
-    """
-    Match solutions to existing approved/pending problems by position.
-    Finds problems in order of comp_problem_number and updates solution_text.
-    """
     query = """
-        SELECT problem_id FROM problems
+        SELECT problem_id, comp_problem_number FROM problems
         WHERE competition_id = ?
           AND comp_year = ?
           AND solution_text IS NULL
           {}
-        ORDER BY comp_problem_number ASC
     """.format("AND comp_event = ?" if comp_event else "AND comp_event IS NULL")
 
     params = [competition_id, comp_year]
@@ -109,12 +104,20 @@ def attach_solutions_to_existing(
         params.append(comp_event)
 
     rows = conn.execute(query, params).fetchall()
+    problem_map = {row["comp_problem_number"]: row["problem_id"] for row in rows}
 
-    matched = min(len(rows), len(solutions))
-    for i in range(matched):
-        conn.execute(
-            "UPDATE problems SET solution_text = ? WHERE problem_id = ?",
-            (solutions[i], rows[i]["problem_id"])
-        )
+    matched = 0
+    unmatched = 0
+    for solution in solutions:
+        prob_num = solution["problem_number"]
+        sol_text = solution["solution_text"]
+        if prob_num in problem_map:
+            conn.execute(
+                "UPDATE problems SET solution_text = ? WHERE problem_id = ?",
+                (sol_text, problem_map[prob_num])
+            )
+            matched += 1
+        else:
+            unmatched += 1
 
-    return matched, len(solutions) - matched  # (matched, unmatched)
+    return matched, unmatched

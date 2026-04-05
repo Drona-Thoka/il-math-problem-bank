@@ -28,7 +28,7 @@ Each object in the array must have these fields:
   - problem_number: integer (1-based position in this document)
   - problem_text: the full problem statement as a LaTeX string
   - image: a Blob or base64 string of any image associated with the problem, else null. If a problem references an image and the image cannot be extracted, include a note in review_notes and set confident to false.
-  - answer: the answer if present in this document, else null. For multiple choice, use the letter only (A/B/C/D/E). For numeric, use the number only, no units or explanation. Keep the answer in the form it is given (For example if the answer says sqrt(3) DO NOT put 1.732)
+  - answer: the answer if present in this document, else null. For multiple choice, use the letter only (A/B/C/D/E). For numeric, use the number only, no units or explanation. Keep the answer in the form it is given (For example if the answer says sqrt(3) DO NOT put 1.732). Some answers may contain algebraic terms, ordered pairs, or short english phrases. Keep these as they are given, do not attempt to simplify or rewrite them. If there are multiple parts to the answer, include them all in a single string with clear formatting. If there are multiple answers, separate them with a comma and space (For example the quadratic x^2 - 5x + 6 = 0 has answer "2, 3"). 
   - comp_difficulty: difficulty label using this competition's native scale: use your own judgement according to the guidelines below, else null
     ICTM: "Easy", "Medium", or "Hard"
     NSML: "Q1", "Q2", "Q3", "Q4", or "Q5"
