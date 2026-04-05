@@ -15,13 +15,15 @@ Usage examples:
 """
 
 import argparse
+from pydoc import text
 import sys
 from pathlib import Path
 
 import pdfplumber
 
-from ingestion.db import get_connection, get_competition_id, insert_problem, attach_topics, attach_solutions_to_existing
+from db import get_connection, get_competition_id, insert_problem, attach_topics, attach_solutions_to_existing
 from parser import parse_problems, parse_solutions
+from dotenv import load_dotenv
 
 
 ANSWER_FORMATS = {
@@ -34,6 +36,7 @@ ANSWER_FORMATS = {
 }
 
 
+
 def extract_text(pdf_path: Path) -> str:
     """Extract all text from a PDF using pdfplumber."""
     text = ""
@@ -42,6 +45,10 @@ def extract_text(pdf_path: Path) -> str:
             page_text = page.extract_text()
             if page_text:
                 text += page_text + "\n\n"
+
+    print(f"Total text length: {len(text)}")
+    print("TEXT SAMPLE:")
+    print(text[:2000])
     return text.strip()
 
 
@@ -72,7 +79,6 @@ def ingest_problems(args, conn):
             "competition_id":      competition_id,
             "problem_text":        p["problem_text"],
             "answer":              p.get("answer"),
-            "answer_format":       answer_format,
             "choices":             p.get("choices"),
             "solution_text":       None,
             "image_path":          None,

@@ -1,9 +1,12 @@
 import json
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 client = OpenAI(
-    api_key= os.getenv("API_KEY"),
+    api_key= os.getenv("OPENAI_API_KEY"),
     base_url="https://api.deepseek.com"
 )
 
@@ -16,8 +19,6 @@ You are parsing a math competition PDF into structured data. Please follow direc
 Competition - ICTM, NSML, AMC10/12, AIME, or ARML: {competition}
 Year - The competition year: {year}
 Event - Specific competition event (Only if the competition is ICTM): {event}
-Difficulty labels - A specific difficulty tag, details explained below: {difficulty_labels}
-Topics - variable, rules explained below: {topics} 
 Answer format - Either Multiple Choice or Numeric: {answer_format}
 
 

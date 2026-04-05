@@ -39,7 +39,7 @@ def insert_problem(conn: sqlite3.Connection, problem: dict) -> int:
     """
     Insert a single parsed problem. Returns the new problem_id.
     problem dict keys:
-        competition_id, problem_text, answer, answer_format,
+        competition_id, problem_text, answer,
         choices_json (optional), solution_text (optional),
         image_path (optional), comp_event (optional),
         comp_year (optional), comp_problem_number (optional),
@@ -47,12 +47,12 @@ def insert_problem(conn: sqlite3.Connection, problem: dict) -> int:
     """
     conn.execute("""
         INSERT INTO problems (
-            competition_id, problem_text, answer, answer_format,
+            competition_id, problem_text, answer,
             choices_json, solution_text, image_path,
             comp_event, comp_year, comp_problem_number,
             comp_difficulty, review_status, review_notes
         ) VALUES (
-            :competition_id, :problem_text, :answer, :answer_format,
+            :competition_id, :problem_text, :answer, 
             :choices_json, :solution_text, :image_path,
             :comp_event, :comp_year, :comp_problem_number,
             :comp_difficulty, :review_status, :review_notes
@@ -61,7 +61,6 @@ def insert_problem(conn: sqlite3.Connection, problem: dict) -> int:
         "competition_id":      problem["competition_id"],
         "problem_text":        problem["problem_text"],
         "answer":              problem.get("answer"),
-        "answer_format":       problem["answer_format"],
         "choices_json":        json.dumps(problem["choices"]) if problem.get("choices") else None,
         "solution_text":       problem.get("solution_text"),
         "image_path":          problem.get("image_path"),
