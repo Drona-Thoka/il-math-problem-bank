@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pdfplumber
 
-from db import get_connection, get_competition_id, insert_problem, attach_topics, attach_solutions_to_existing
+from ingestion.db import get_connection, get_competition_id, insert_problem, attach_topics, attach_solutions_to_existing
 from parser import parse_problems, parse_solutions
 
 
